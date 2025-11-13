@@ -1,0 +1,22 @@
+<h2 class="text-xl font-semibold mb-4">Your saved locations</h2>
+
+<%= turbo_frame_tag "locations" do %>
+  <% if @locations.any? %>
+    <div class="grid gap-4 md:grid-cols-2">
+      <%= render @locations %>
+    </div>
+  <% else %>
+    <p class="text-slate-600 italic mb-4">
+      No locations yet. Add one below to get a 7-day forecast.
+    </p>
+  <% end %>
+<% end %>
+
+<hr class="my-6">
+
+<div class="bg-white shadow-sm rounded-xl p-4">
+  <h3 class="text-lg font-semibold mb-3">Add a location</h3>
+  <%= turbo_frame_tag "new_location" do %>
+    <%= render "form", location: @location %>
+  <% end %>
+</div>

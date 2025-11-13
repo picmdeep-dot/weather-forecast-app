@@ -1,0 +1,32 @@
+<%= form_with model: location, data: { controller: "location_form" } do |f| %>
+
+  <div class="mb-2">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: "border p-2 w-full" %>
+  </div>
+
+  <div class="mb-2">
+    <label class="mr-4">
+      <input type="radio" name="mode" value="address" checked onchange="this.closest('[data-controller]')?.update()">
+      Text address
+    </label>
+    <label>
+      <input type="radio" name="mode" value="ip" onchange="this.closest('[data-controller]')?.update()">
+      IP address
+    </label>
+  </div>
+
+  <div class="mb-2" data-field="address">
+    <%= f.label :street_address, "Street/City/State/Country" %>
+    <%= f.text_field :street_address, class: "border p-2 w-full" %>
+  </div>
+
+  <div class="mb-2" data-field="ip" style="display:none">
+    <%= f.label :ip_address %>
+    <%= f.text_field :ip_address, class: "border p-2 w-full" %>
+  </div>
+
+<%= f.submit class: "bg-black text-white px-4 py-2 rounded" %>
+  <div id="form_errors" class="text-red-600 mt-2"></div>
+<% end %>
+

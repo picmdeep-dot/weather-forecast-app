@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  location: one
+  date: 2025-11-10
+  high_f: 1.5
+  low_f: 1.5
+  summary: MyString
+
+two:
+  location: two
+  date: 2025-11-10
+  high_f: 1.5
+  low_f: 1.5
+  summary: MyString

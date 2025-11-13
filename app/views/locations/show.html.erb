@@ -1,0 +1,42 @@
+<p><%= link_to "← Back", locations_path %></p>
+
+<h1 class="text-2xl font-bold mb-4"><%= @location.name %></h1>
+
+<p class="text-gray-600 mb-4">
+  Lat/Lng: <%= @location.latitude %>, <%= @location.longitude %>
+</p>
+
+<% if @forecast_days.any? %>
+
+<table class="min-w-full text-sm bg-white shadow-sm rounded-xl overflow-hidden">
+  <thead class="bg-slate-50 text-slate-600">
+    <tr>
+      <th class="px-3 py-2 text-left font-semibold">Date</th>
+      <th class="px-3 py-2 text-left font-semibold">Summary</th>
+      <th class="px-3 py-2 text-left font-semibold">Low (°F)</th>
+      <th class="px-3 py-2 text-left font-semibold">High (°F)</th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-slate-100">
+    <% @forecast_days.each do |d| %>
+      <tr>
+        <td class="px-3 py-2 text-slate-800"><%= d.date.strftime('%a %b %d') %></td>
+        <td class="px-3 py-2 text-slate-600"><%= d.summary %></td>
+        <td class="px-3 py-2 font-semibold text-blue-700"><%= d.low_f&.round %></td>
+        <td class="px-3 py-2 font-semibold text-red-700"><%= d.high_f&.round %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="mt-6 h-72 bg-white shadow-sm rounded-xl p-4"
+     data-controller="forecast-chart"
+     data-labels='<%= @forecast_days.map { |d| d.date.strftime("%a") }.to_json %>'
+     data-highs='<%= @forecast_days.map(&:high_f).to_json %>'
+     data-lows='<%= @forecast_days.map(&:low_f).to_json %>'>
+  <canvas></canvas>
+</div>
+
+<% else %>
+  <p>No forecast yet. This usually appears a moment after creation. Try refreshing.</p>
+<% end %>
