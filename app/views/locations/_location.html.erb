@@ -1,25 +1,38 @@
 <%= turbo_frame_tag dom_id(location) do %>
-  <article class="bg-white shadow-sm rounded-xl p-4 flex items-start justify-between gap-3">
-    <div>
+  <article class="bg-white rounded-xl shadow-sm p-4 flex items-start justify-between gap-3">
+    <div class="space-y-1">
       <h3 class="font-semibold text-slate-900">
-        <%= link_to location.name, location, class: "hover:underline", data: { turbo_frame: "_top" } %>
+        <%= link_to location.name, location,
+              class: "hover:underline",
+              data: { turbo_frame: "_top" } %>
       </h3>
-      <p class="text-sm text-slate-600 mt-1">
-        <% if location.street_address.present? %>
+
+      <% if location.street_address.present? %>
+        <p class="text-sm text-slate-600">
+          <span class="text-xs font-medium bg-slate-100 px-2 py-0.5 rounded-full mr-1">Text Address</span>
           <%= location.street_address %>
-        <% elsif location.ip_address.present? %>
-          IP: <%= location.ip_address %>
-        <% end %>
-      </p>
+        </p>
+      <% elsif location.ip_address.present? %>
+        <p class="text-sm text-slate-600">
+          <span class="text-xs font-medium bg-slate-100 px-2 py-0.5 rounded-full mr-1">IP-Based</span>
+          <%= location.display_name %>
+        </p>
+
+        <p class="text-xs text-slate-400 font-mono">
+          From IP: <%= location.ip_address %>
+        </p>
+      <% end %>
     </div>
-    <div class="flex flex-col gap-1 text-sm">
-      <%= link_to "Edit", edit_location_path(location),
-            class: "text-blue-600 hover:text-blue-800",
+
+    <div class="flex flex-col gap-3 text-sm text-right">
+      <%= link_to "Edit",
+            edit_location_path(location),
+            class: "text-blue-600 hover:text-blue-800 underline",
             data: { turbo_frame: "_top" } %>
       <%= button_to "Delete", location,
             method: :delete,
             data: { turbo_confirm: "Delete #{location.name}?" },
-            class: "text-red-600 hover:text-red-800 text-left" %>
+            class: "text-red-600 visited:text-red-600 hover:text-red-800 text-left" %>
     </div>
   </article>
 <% end %>

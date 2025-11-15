@@ -2,7 +2,7 @@
 
   <ul>
     <% @location.errors.full_messages.each do |m| %>
-      <li><%= m %></li>
+      <li class="text-red-600 font-bold"><%= m %></li>
     <% end %>
   </ul>
 <% end %>

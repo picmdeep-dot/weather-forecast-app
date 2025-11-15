@@ -7,6 +7,8 @@ class LocationsController < ApplicationController
   end
 
   def show
+    @location = Location.find(params[:id])
+    @location.refresh_forecast_if_stale!
     @forecast_days = @location.forecast_days.order(:date)
   end
 
@@ -15,7 +17,23 @@ class LocationsController < ApplicationController
   end
 
   def create
-    @location = Location.new(location_params)
+    attributes = location_params.to_h
+    mode = params[:mode] # "ip" or "street address" from form selection
+
+    if mode =="ip"
+      ip = if Rails.env.development?
+        # TEMP hardcoded value for local testing
+        "8.8.8.8"
+      else
+        request.remote_ip
+      end
+      attributes["ip_address"] = ip if attributes["ip_address"].blank?
+      attributes["street_address"] = nil
+    elsif mode == "address"
+      attributes["ip_address"] = nil if attributes["street_address"].present?
+    end
+
+    @location = Location.new(attributes)
     if @location.save
       respond_to do |format|
         format.html { redirect_to @location, notice: "Location created" }

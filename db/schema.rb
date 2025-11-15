@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_11_023040) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_15_182903) do
   create_table "forecast_days", force: :cascade do |t|
     t.integer "location_id", null: false
     t.date "date"
@@ -30,6 +30,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_023040) do
     t.float "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "forecast_refreshed_at"
   end
 
   add_foreign_key "forecast_days", "locations"

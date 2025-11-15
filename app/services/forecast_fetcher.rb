@@ -1,4 +1,3 @@
-# app/services/forecast_fetcher.rb
 class ForecastFetcher
   OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast".freeze
 
@@ -7,7 +6,6 @@ class ForecastFetcher
     @lng = lng
   end
 
-  # returns array of {date:, high_f:, low_f:, summary:}
   def call
     conn = Faraday.new(OPEN_METEO_URL)
     resp = conn.get("", {
@@ -39,7 +37,6 @@ class ForecastFetcher
 
   private
 
-  # tiny mapping (extend as desired)
   def weathercode_to_summary(code)
     case code
     when 0 then "Clear"
