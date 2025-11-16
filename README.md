@@ -1,4 +1,3 @@
-```markdown
 # 🌤️ Weather Locations App
 
 A lightweight Ruby on Rails application that allows users to:
