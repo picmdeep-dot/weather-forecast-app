@@ -87,5 +87,4 @@ RSpec.configure do |config|
       Geocoder::Lookup::Test.reset
     end
   end
-  
 end

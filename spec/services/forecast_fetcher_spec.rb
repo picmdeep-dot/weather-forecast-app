@@ -15,10 +15,10 @@ RSpec.shared_context "open-meteo stub" do
         status: 200,
         body: {
           daily: {
-            time: ["2025-01-01", "2025-01-02"],
-            temperature_2m_max: [32.0, 35.0],
-            temperature_2m_min: [20.0, 22.0],
-            weathercode: [0, 3]
+            time: [ "2025-01-01", "2025-01-02" ],
+            temperature_2m_max: [ 32.0, 35.0 ],
+            temperature_2m_min: [ 20.0, 22.0 ],
+            weathercode: [ 0, 3 ]
           }
         }.to_json,
         headers: { "Content-Type" => "application/json" }
@@ -43,10 +43,10 @@ RSpec.describe ForecastFetcher do
   let(:response_body) do
     {
       daily: {
-        time:               ["2025-01-01", "2025-01-02"],
-        temperature_2m_max: [60.5, 62.0],
-        temperature_2m_min: [40.1, 41.2],
-        weathercode:        [0, 61] # Clear, Rain
+        time:               [ "2025-01-01", "2025-01-02" ],
+        temperature_2m_max: [ 60.5, 62.0 ],
+        temperature_2m_min: [ 40.1, 41.2 ],
+        weathercode:        [ 0, 61 ] # Clear, Rain
       }
     }.to_json
   end

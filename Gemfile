@@ -5,7 +5,7 @@ gem "rails", "~> 8.0.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record development and testing environment
-gem "sqlite3", ">= 2.1", group: [:development, :test]
+gem "sqlite3", ">= 2.1", group: [ :development, :test ]
 # Use Postress for production
 gem "pg", "~> 1.5"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -71,6 +71,6 @@ gem "geocoder", "~> 1.8"
 
 gem "faraday", "~> 2.14"
 
-gem "foreman", "~> 0.90.0", :group => :development
+gem "foreman", "~> 0.90.0", group: :development
 
 gem "tailwindcss-rails"

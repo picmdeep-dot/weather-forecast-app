@@ -19,7 +19,7 @@ RSpec.describe Location, type: :model do
         latitude: 41.8781,
         longitude: -87.6298
       )
-      allow(Geocoder).to receive(:search).and_return([geocoder_result])
+      allow(Geocoder).to receive(:search).and_return([ geocoder_result ])
 
       location = Location.new(name: "Chicago", street_address: "Chicago, IL")
       expect(location).to be_valid
@@ -32,7 +32,7 @@ RSpec.describe Location, type: :model do
         latitude: 41.8781,
         longitude: -87.6298
       )
-      allow(Geocoder).to receive(:search).with("Chicago, IL").and_return([geocoder_result])
+      allow(Geocoder).to receive(:search).with("Chicago, IL").and_return([ geocoder_result ])
 
       location = Location.create!(name: "Chicago", street_address: "Chicago, IL")
 
@@ -61,10 +61,10 @@ RSpec.describe Location, type: :model do
         latitude: 41.0,
         longitude: -87.0
       )
-      allow(Geocoder).to receive(:search).and_return([geocoder_result])
-  
+      allow(Geocoder).to receive(:search).and_return([ geocoder_result ])
+
       ActiveJob::Base.queue_adapter = :test
-  
+
       expect {
         Location.create!(name: "Chicago", street_address: "Chicago, IL")
       }.to have_enqueued_job(RefreshForecastJob)

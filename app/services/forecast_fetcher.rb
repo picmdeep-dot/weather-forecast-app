@@ -40,12 +40,12 @@ class ForecastFetcher
   def weathercode_to_summary(code)
     case code
     when 0 then "Clear"
-    when 1,2 then "Mostly clear"
+    when 1, 2 then "Mostly clear"
     when 3 then "Overcast"
-    when 45,48 then "Fog"
-    when 51,53,55 then "Drizzle"
-    when 61,63,65 then "Rain"
-    when 71,73,75 then "Snow"
+    when 45, 48 then "Fog"
+    when 51, 53, 55 then "Drizzle"
+    when 61, 63, 65 then "Rain"
+    when 71, 73, 75 then "Snow"
     when 95 then "Thunderstorm"
     else "—"
     end

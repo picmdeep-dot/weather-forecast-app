@@ -6,7 +6,7 @@ class Location < ApplicationRecord
   validate :geocode_if_needed
 
   before_validation :strip_blanks
-  after_commit :refresh_forecast_async, on: [:create, :update]
+  after_commit :refresh_forecast_async, on: [ :create, :update ]
 
   def ip_or_address_present
     if ip_address.blank? && street_address.blank?
@@ -33,18 +33,18 @@ class Location < ApplicationRecord
   def geocode_if_needed
     # if coordinates already set to something truthy, skip
     return if latitude.present? && longitude.present?
-  
+
     query =
       if street_address.present?
         street_address
       elsif ip_address.present?
         ip_address
       end
-  
+
     return if query.blank?
-  
+
     result = Geocoder.search(query).first
-  
+
     unless result
       errors.add(
         street_address.present? ? :street_address : :ip_address,
@@ -52,25 +52,25 @@ class Location < ApplicationRecord
       )
       return
     end
-  
+
     lat = if result.respond_to?(:latitude)
       result.latitude
     else
       result["lat"] || result[:lat]
     end
-  
+
     lng = if result.respond_to?(:longitude)
       result.longitude
     else
       result["lon"] || result[:lon] || result["lng"] || result[:lng]
     end
-  
+
     self.latitude  = lat
     self.longitude = lng
   rescue => e
     Rails.logger.warn("[Location#geocode_if_needed] #{e.class}: #{e.message}")
   end
-  
+
   # Check if forecast is current, update if not
   def refresh_forecast_if_stale!
     return if forecast_fresh?
@@ -116,7 +116,7 @@ class Location < ApplicationRecord
     if result.respond_to?(method)
       result.public_send(method)
     elsif result.is_a?(Hash)
-      # in case you ever get a hash result
+      # in case hash result
       result[method.to_s] || result[method]
     end
   end

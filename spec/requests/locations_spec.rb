@@ -6,7 +6,7 @@ RSpec.describe "Locations", type: :request do
       latitude: 41.8781,
       longitude: -87.6298
     )
-    allow(Geocoder).to receive(:search).and_return([geocoder_result])
+    allow(Geocoder).to receive(:search).and_return([ geocoder_result ])
 
     post "/locations", params: {
       mode: "address",
