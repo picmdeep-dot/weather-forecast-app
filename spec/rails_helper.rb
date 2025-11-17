@@ -76,5 +76,16 @@ RSpec.configure do |config|
                    headers: { "Content-Type" => "application/json" })
     end
   end
+
+  Geocoder.configure(
+    lookup: :test,
+    ip_lookup: :test
+  )
+
+  RSpec.configure do |config|
+    config.before(:each) do
+      Geocoder::Lookup::Test.reset
+    end
+  end
   
 end

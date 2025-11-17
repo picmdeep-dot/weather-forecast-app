@@ -1,4 +1,4 @@
-# 🌤️ Weather Locations App
+# Weather Locations App
 
 A lightweight Ruby on Rails application that allows users to:
 
@@ -9,23 +9,22 @@ A lightweight Ruby on Rails application that allows users to:
 - Optionally display a **chart** of highs/lows (Stimulus + Chart.js)
 - Perform CRUD operations with **Turbo/Stimulus enhancements**
 
-This project was built as part of a take-home assignment to demonstrate knowledge of Rails, API integration, modern Rails frontend (Turbo/Stimulus), and basic test coverage.
-
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
-- **Ruby 3.3+**
+- **Ruby 3.4+**
 - **Rails 8.x**
-- **TailwindCSS**
-- **Geocoder** (Nominatim + IP services)
+- **TailwindCSS** (via `tailwindcss-rails`)
+- **SQLite** (local development)
+- **Geocoder** (Nominatim + IP lookup)
 - **Open-Meteo API**
 - **Turbo Streams & Stimulus**
 - **RSpec** (unit + system tests)
 
 ---
 
-# 🚀 Getting Started (Local Development)
+# Getting Started (Local Development)
 
 ## 1. Clone the repository
 
@@ -36,34 +35,42 @@ cd weather-locations
 
 ---
 
-## 2. Install dependencies
+## 2. Install Ruby dependencies
 
 ```bash
 bundle install
 ```
 
+This installs Rails, Tailwind, Geocoder, RSpec, and all other gems.
+
 ---
 
-## 3. Set up the database
+## 3. Set up the database (SQLite for local)
 
-PostgreSQL:
+SQLite is used for development and testing.
 
 ```bash
-rails db:create
-rails db:migrate
+bin/rails db:setup
 ```
 
-SQLite:
+This will:
+
+- Create dev & test SQLite DB files  
+- Load the schema  
+- Seed data (if present)
+
+Or manually:
 
 ```bash
-rails db:migrate
+bin/rails db:create
+bin/rails db:migrate
 ```
 
 ---
 
 ## 4. Configure Geocoder (Required)
 
-Nominatim requires a valid **User-Agent** with an email address.
+Nominatim requires a User-Agent header with your email.
 
 Edit:
 
@@ -83,86 +90,98 @@ Geocoder.configure(
 )
 ```
 
-Without this, address lookups **will fail**.
+If omitted, address lookups will fail.
 
 ---
 
-## 5. Start the server
+## 5. Run the application (with Tailwind)
+
+Recommended:
 
 ```bash
 bin/dev
 ```
 
-or:
+This runs:
 
-```bash
-rails server
-```
+- Rails server  
+- Tailwind watcher  
 
-Open:
+Then visit:
 
 ```
 http://localhost:3000
 ```
 
+### Running Rails and Tailwind separately
+
+**Rails server:**
+
+```bash
+bin/rails server
+```
+
+**Tailwind watcher:**
+
+```bash
+bin/rails tailwindcss:watch
+```
+
 ---
 
-# 🌎 Features
+# Features
 
 ## ✓ Add Locations (Address or IP)
 
-Users can add a location in one of two modes:
-
-- **Street address** — geocoded via Nominatim  
-- **IP address** — geolocated to approximate region  
-
-A Stimulus controller toggles the form fields dynamically.
+- Street address → geocoded via Nominatim  
+- IP address → approximate geolocation  
+- Stimulus controller toggles input fields  
 
 ---
 
 ## ✓ Location List
 
-Each card displays:
+Each location card shows:
 
 - Name  
-- Friendly derived location label (e.g., “Chicago, IL”)  
-- Underlying IP (if applicable)  
+- Friendly region  
+- IP address (if applicable)  
 - Edit/Delete actions  
 
-Turbo Streams update the list instantly after creation or deletion.
+Turbo Streams update the UI immediately.
 
 ---
 
 ## ✓ 7-Day Weather Forecast
 
-Uses Open-Meteo to display:
+Displays:
 
-- Daily high temperatures  
-- Daily low temperatures  
-- Dates  
+- High temperature  
+- Low temperature  
+- Full 7-day span  
 
-High/lows visually highlighted.
-
----
-
-## ✓ Chart.js Temperature Graph (Bonus)
-
-A Stimulus controller loads a Chart.js line graph showing:
-
-- Highs (red)  
-- Lows (blue)  
-
-Only loads when viewing a location’s detail page.
+Powered by Open-Meteo.
 
 ---
 
-# 🧪 Testing
+## ✓ Temperature Chart (Optional)
 
-The project includes:
+Stimulus + Chart.js:
 
-- Model tests  
-- Service tests (`ForecastFetcher`)  
-- System tests (Turbo + UI behavior)  
+- Highs = red  
+- Lows = blue  
+
+Rendered only on the show page.
+
+---
+
+# Testing
+
+Includes:
+
+- Model specs  
+- Service specs (`ForecastFetcher`)  
+- System specs (Turbo/Stimulus UI behavior)
 
 Run all tests:
 
@@ -170,66 +189,9 @@ Run all tests:
 bundle exec rspec
 ```
 
-Recommended before deployment:
+Recommended before committing:
 
 ```bash
 RAILS_ENV=test bundle exec rspec
-rails db:migrate RAILS_ENV=production
 ```
 
----
-
-# 📁 Project Structure (Simplified)
-
-```
-app/
-  models/location.rb
-  controllers/locations_controller.rb
-  services/forecast_fetcher.rb
-  views/locations/
-    index.html.erb
-    show.html.erb
-    _form.html.erb
-    _location.html.erb
-    create.turbo_stream.erb
-  javascript/controllers/
-    location_form_controller.js
-    forecast_chart_controller.js
-
-config/
-  initializers/geocoder.rb
-
-spec/
-  models/
-  services/
-  system/
-```
-
----
-
-# 🚀 Deployment
-
-Deployable to:
-
-- **Render**
-- **Fly.io**
-- **Heroku**  
-
-No environment variables required unless swapping geocoding providers.
-
----
-
-# 📝 Notes for Reviewers
-
-- Uses **conventional Rails structure** and avoids unnecessary abstractions  
-- Turbo/Stimulus used intentionally to demonstrate modern Rails practices  
-- External API calls are wrapped in a service object for testability  
-- API interactions are stubbed in RSpec for deterministic tests  
-- UI intentionally clean and minimal via TailwindCSS  
-
----
-
-# 📜 License
-
-MIT (or your preferred license)
-```
