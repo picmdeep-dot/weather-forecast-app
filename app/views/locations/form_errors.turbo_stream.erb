@@ -1,0 +1,8 @@
+<%= turbo_stream.replace "form_errors" do %>
+
+  <ul>
+    <% @location.errors.full_messages.each do |m| %>
+      <li class="text-red-600 font-bold"><%= m %></li>
+    <% end %>
+  </ul>
+<% end %>

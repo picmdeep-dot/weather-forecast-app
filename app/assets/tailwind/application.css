@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Ensure Tailwind text colors win on links */
+a.text-blue-600,
+a.text-blue-600:visited {
+  color: #2563eb;
+  /* Tailwind blue-600 */
+}
+
+a.text-blue-800,
+a.text-blue-800:visited {
+  color: #1d4ed8;
+  /* Tailwind blue-800 */
+}

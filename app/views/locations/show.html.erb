@@ -1,0 +1,82 @@
+<p class="mb-3">
+  <%= link_to "← Back to locations", locations_path,
+        class: "text-sm text-slate-600 hover:text-slate-900",
+        data: { turbo_frame: "_top" } %>
+</p>
+
+<section class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div>
+    <h2 class="text-2xl font-bold tracking-tight mb-1"><%= @location.name %></h2>
+
+    <p class="text-sm text-slate-600">
+      <% if @location.street_address.present? %>
+        <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 mr-2">
+          Address
+        </span>
+        <%= @location.street_address %>
+      <% elsif @location.ip_address.present? %>
+        <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 mr-2">
+          IP-based Location
+        </span>
+        <span class="font-mono text-xs"><%= @location.display_name %></span>
+        <p class="text-xs text-slate-400 font-mono mt-1">
+          Detected from IP: <%= @location.ip_address %>
+        </p>
+      <% end %>
+    </p>
+
+    <p class="text-xs text-slate-500 mt-2">
+      Lat/Lng: <%= @location.latitude %>, <%= @location.longitude %>
+    </p>
+  </div>
+
+  <div class="text-sm text-slate-600">
+    <p>7-day forecast powered by Open-Meteo.</p>
+  </div>
+</section>
+
+<% if @forecast_days.any? %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <section class="bg-white shadow-sm rounded-xl p-4">
+      <h3 class="text-sm font-semibold text-slate-700 mb-3">Daily highs & lows</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600">
+            <tr>
+              <th class="px-3 py-2 text-left font-semibold">Date</th>
+              <th class="px-3 py-2 text-left font-semibold">Summary</th>
+              <th class="px-3 py-2 text-left font-semibold">Low (°F)</th>
+              <th class="px-3 py-2 text-left font-semibold">High (°F)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% @forecast_days.each do |d| %>
+              <tr>
+                <td class="px-3 py-2 text-slate-800"><%= d.date.strftime('%a %b %d') %></td>
+                <td class="px-3 py-2 text-slate-600"><%= d.summary %></td>
+                <td class="px-3 py-2 font-semibold text-blue-700"><%= d.low_f&.round %></td>
+                <td class="px-3 py-2 font-semibold text-red-700"><%= d.high_f&.round %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bg-white shadow-sm rounded-xl p-4">
+      <h3 class="text-sm font-semibold text-slate-700 mb-3">Temperature trend</h3>
+      <div class="h-64"
+           data-controller="forecast-chart"
+           data-labels='<%= @forecast_days.map { |d| d.date.strftime("%a") }.to_json %>'
+           data-highs='<%= @forecast_days.map(&:high_f).to_json %>'
+           data-lows='<%= @forecast_days.map(&:low_f).to_json %>'>
+        <canvas></canvas>
+      </div>
+    </section>
+  </div>
+<% else %>
+  <p class="text-slate-600">
+    No forecast data yet. It should appear shortly after creating the location;
+    refresh the page in a moment.
+  </p>
+<% end %>
