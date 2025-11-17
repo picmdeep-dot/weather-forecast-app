@@ -1,7 +1,5 @@
 # weather-forecast-app
-Simple weather forecast application that allows a user to set multiple locations and see the forecast for each location
 =======
-# Weather Locations App
 
 A lightweight Ruby on Rails application that allows users to:
 
