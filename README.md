@@ -1,5 +1,4 @@
 # weather-forecast-app
-=======
 
 A lightweight Ruby on Rails application that allows users to:
 
