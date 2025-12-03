@@ -36,8 +36,8 @@
   </div>
 
   <div class="flex items-center justify-between gap-3 mt-4">
-    <%= f.submit "Create Location",
-          class: "inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700" %>
+    <%= f.submit(location&.persisted? ? "Update Location" : "Create Location",
+      class: "inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700") %>
 
     <div id="form_errors" class="text-xs text-red-600"></div>
   </div>

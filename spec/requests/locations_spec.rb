@@ -8,6 +8,9 @@ RSpec.describe "Locations", type: :request do
     )
     allow(Geocoder).to receive(:search).and_return([ geocoder_result ])
 
+    # Stub the refresh job
+    allow(RefreshForecastJob).to receive(:perform_later)
+
     post "/locations", params: {
       mode: "address",
       location: {
@@ -19,6 +22,9 @@ RSpec.describe "Locations", type: :request do
     location = Location.last
     expect(response).to redirect_to(location_path(location))
     follow_redirect!
+
+    GeocodeLocationJob.perform_now(location.id)
+    location.reload
 
     expect(response.body).to include("Chicago")
     expect(location.latitude).to be_present

@@ -25,7 +25,7 @@ class LocationsController < ApplicationController
         # TEMP hardcoded value for local testing
         "8.8.8.8"
       else
-        request.remote_ip
+        request.ip
       end
       attributes["ip_address"] = ip if attributes["ip_address"].blank?
       attributes["street_address"] = nil

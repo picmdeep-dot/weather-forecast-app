@@ -15,29 +15,8 @@ RSpec.describe Location, type: :model do
     end
 
     it "is valid with a street address" do
-      geocoder_result = double("Geocoder::Result",
-        latitude: 41.8781,
-        longitude: -87.6298
-      )
-      allow(Geocoder).to receive(:search).and_return([ geocoder_result ])
-
       location = Location.new(name: "Chicago", street_address: "Chicago, IL")
       expect(location).to be_valid
-    end
-  end
-
-  describe "#geocode_if_needed" do
-    it "sets latitude/longitude from geocoder result" do
-      geocoder_result = double("Geocoder::Result",
-        latitude: 41.8781,
-        longitude: -87.6298
-      )
-      allow(Geocoder).to receive(:search).with("Chicago, IL").and_return([ geocoder_result ])
-
-      location = Location.create!(name: "Chicago", street_address: "Chicago, IL")
-
-      expect(location.latitude).to eq(41.8781)
-      expect(location.longitude).to eq(-87.6298)
     end
   end
 
@@ -57,12 +36,6 @@ RSpec.describe Location, type: :model do
   describe "callbacks" do
     include ActiveJob::TestHelper
     it "enqueues RefreshForecastJob after create" do
-      geocoder_result = double("Geocoder::Result",
-        latitude: 41.0,
-        longitude: -87.0
-      )
-      allow(Geocoder).to receive(:search).and_return([ geocoder_result ])
-
       ActiveJob::Base.queue_adapter = :test
 
       expect {

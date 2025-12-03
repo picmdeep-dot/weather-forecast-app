@@ -3,7 +3,6 @@ class Location < ApplicationRecord
 
   validates :name, presence: true
   validate :ip_or_address_present
-  validate :geocode_if_needed
 
   before_validation :strip_blanks
   after_commit :refresh_forecast_async, on: [ :create, :update ]
@@ -30,63 +29,21 @@ class Location < ApplicationRecord
     end
   end
 
-  def geocode_if_needed
-    # if coordinates already set to something truthy, skip
-    return if latitude.present? && longitude.present?
+  after_create_commit :enqueue_geocode_job
+  after_update_commit :enqueue_geocode_job, if: :address_or_ip_changed?
 
-    query =
-      if street_address.present?
-        street_address
-      elsif ip_address.present?
-        ip_address
-      end
+  def enqueue_geocode_job
+    GeocodeLocationJob.perform_later(id)
+  end
 
-    return if query.blank?
-
-    result = Geocoder.search(query).first
-
-    unless result
-      errors.add(
-        street_address.present? ? :street_address : :ip_address,
-        "could not be geocoded. Please check the #{street_address.present? ? 'address' : 'IP'}."
-      )
-      return
-    end
-
-    lat = if result.respond_to?(:latitude)
-      result.latitude
-    else
-      result["lat"] || result[:lat]
-    end
-
-    lng = if result.respond_to?(:longitude)
-      result.longitude
-    else
-      result["lon"] || result[:lon] || result["lng"] || result[:lng]
-    end
-
-    self.latitude  = lat
-    self.longitude = lng
-  rescue => e
-    Rails.logger.warn("[Location#geocode_if_needed] #{e.class}: #{e.message}")
+  def address_or_ip_changed?
+    saved_change_to_ip_address? || saved_change_to_street_address?
   end
 
   # Check if forecast is current, update if not
   def refresh_forecast_if_stale!
     return if forecast_fresh?
-
-    forecast_days.destroy_all
-
-    ForecastFetcher.new(lat: latitude, lng: longitude).call.each do |day|
-      forecast_days.create!(
-        date: day[:date],
-        high_f: day[:high_f],
-        low_f: day[:low_f],
-        summary: day[:summary]
-      )
-    end
-
-    touch(:forecast_refreshed_at)
+    ForecastUpdater.new(location: self).call
   end
 
   def refresh_forecast_async
